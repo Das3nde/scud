@@ -4,6 +4,8 @@ var browserSync = require('browser-sync').create()
 var chalk = require('chalk')
 var gulp = require('gulp')
 
+var $ = require('gulp-load-plugins')()
+
 if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
   require('dotenv').load()
 }
@@ -25,7 +27,7 @@ gulp.task('nodemon', function (cb) {
     })
 })
 
-gulp.task('browser-sync', function (done) {
+gulp.task('serve', function (done) {
   browserSync.init({
     proxy: 'http://localhost:8080',
     port: 8081,
@@ -36,6 +38,6 @@ gulp.task('browser-sync', function (done) {
   }, done)
 })
 
-gulp.task('watch', ['nodemon', 'browser-sync'])
+gulp.task('watch', ['nodemon', 'serve'])
 
 gulp.task('default', ['watch'])
