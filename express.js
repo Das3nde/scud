@@ -5,6 +5,7 @@ function createApp () {
   // var favicon = require('serve-favicon')
   var logger = require('morgan')
   var cookieParser = require('cookie-parser')
+  var cookieSession = require('cookie-session')
   var bodyParser = require('body-parser')
 
   var routes = require('./routes')
@@ -33,9 +34,12 @@ function createApp () {
   // uncomment after placing your favicon in /public
   // app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
   app.use(logger('dev'))
-  app.use(bodyParser.json())
-  app.use(bodyParser.urlencoded({ extended: false }))
+  app.use(bodyParser.json({uploadDir: './temp'}))
+  app.use(bodyParser.urlencoded({ extended: true }))
   app.use(cookieParser())
+  app.use(cookieSession({
+    keys: ['key1', 'key2']
+  }))
   app.use(express.static(path.join(__dirname, 'public')))
 
   app.use('/', routes)
