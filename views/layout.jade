@@ -1,7 +1,29 @@
 doctype html
+
 html
   head
-    title= title
-    link(rel='stylesheet', href='/stylesheets/style.css')
-  body
-    block content
+    title #{title}
+
+    base(href='/')
+    
+    meta(name='description'
+      content='#{content}')
+
+    meta(charset="UTF-8")
+
+    meta(name='viewport'
+      content='width=device-width, user-scalable=no, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0')
+
+    link(rel='canonical'
+      href='http://www.scudregistry.org')
+
+    script(type='text/javascript'
+      src='/angular/libs.js')
+
+    script(type='text/javascript'
+      src='/angular/app.js')
+
+    block head
+
+ body(ng-app='SCUDApp' lang='en' ng-strict-di)
+    block body
