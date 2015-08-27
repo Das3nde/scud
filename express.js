@@ -25,6 +25,18 @@ function createApp () {
   mongoose.connect(MONGO_SERVER)
   require('./models')
 
+  /*
+   * MongoDB Sessions
+   */
+
+  var session = require('express-session')
+  var MongoDBStore = require('connect-mongodb-session')(session)
+
+  var store = new MongoDBStore({
+    uri: MONGO_SERVER,
+    collection: 'sessions'
+  })
+
   var app = express()
 
   // view engine setup
@@ -39,6 +51,12 @@ function createApp () {
   app.use(cookieParser())
   app.use(cookieSession({
     keys: ['key1', 'key2']
+  }))
+  app.use(session({
+    resave: true,
+    saveUninitialized: true,
+    secret: 'Pkdj3Hkd4',
+    store: store
   }))
   app.use(express.static(path.join(__dirname, 'public')))
 
