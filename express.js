@@ -1,4 +1,5 @@
 function createApp () {
+  var chalk = require('chalk')
   var express = require('express')
   var path = require('path')
   // var favicon = require('serve-favicon')
@@ -6,8 +7,22 @@ function createApp () {
   var cookieParser = require('cookie-parser')
   var bodyParser = require('body-parser')
 
-  var routes = require('./routes/index')
+  var routes = require('./routes')
   var users = require('./routes/users')
+
+  /*
+   * MongoDB and Mongoose Configuration
+   */
+
+  var mongoose = require('mongoose')
+
+  var MONGO_SERVER = process.env.MONGO_URI
+  if (!MONGO_SERVER) {
+    throw new Error(chalk.red('Please specify MONGO_URI in .env file'))
+  }
+
+  mongoose.connect(MONGO_SERVER)
+  require('./models')
 
   var app = express()
 
