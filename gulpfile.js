@@ -38,6 +38,4 @@ gulp.task('serve', function (done) {
   }, done)
 })
 
-gulp.task('watch', ['nodemon', 'serve'])
-
-gulp.task('default', ['watch'])
+gulp.task('default', ['nodemon', 'serve'])
