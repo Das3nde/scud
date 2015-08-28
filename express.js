@@ -9,7 +9,6 @@ function createApp () {
   var bodyParser = require('body-parser')
 
   var routes = require('./routes')
-  var users = require('./routes/users')
 
   /*
    * MongoDB and Mongoose Configuration
@@ -61,7 +60,6 @@ function createApp () {
   app.use(express.static(path.join(__dirname, 'public')))
 
   app.use('/', routes)
-  app.use('/users', users)
 
   // catch 404 and forward to error handler
   app.use(function (req, res, next) {

@@ -6,4 +6,8 @@ router.get('/', function (req, res, next) {
   res.render('index', { title: 'Express' })
 })
 
+router.use(function(req, res) {
+  res.render('index', {title: 'SCUD Registry'})
+})
+
 module.exports = router
