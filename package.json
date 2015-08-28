@@ -29,6 +29,7 @@
   "dependencies": {
     "angular": "^1.4.1",
     "angular-ui-router": "^0.2.15",
+    "bcrypt": "^0.8.0",
     "body-parser": "~1.13.2",
     "browserify": "^11.0.1",
     "browserify-ngannotate": "^1.0.1",
@@ -60,6 +61,7 @@
     "mongodb": "^2.0.35",
     "mongoose": "^4.0.x",
     "morgan": "~1.6.1",
+    "passport": "^0.2.0",
     "serve-favicon": "~2.3.0",
     "throng": "^1.0.0",
     "vinyl-buffer": "^1.0.0",

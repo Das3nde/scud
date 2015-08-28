@@ -7,22 +7,19 @@ function createApp () {
   var cookieParser = require('cookie-parser')
   var cookieSession = require('cookie-session')
   var bodyParser = require('body-parser')
-
-  var routes = require('./routes')
+  var passport = require('passport')
 
   /*
    * MongoDB and Mongoose Configuration
    */
 
   var mongoose = require('mongoose')
+  mongoose.connect(MONGO_SERVER)
 
   var MONGO_SERVER = process.env.MONGO_URI
   if (!MONGO_SERVER) {
     throw new Error(chalk.red('Please specify MONGO_URI in .env file'))
   }
-
-  mongoose.connect(MONGO_SERVER)
-  require('./models')
 
   /*
    * MongoDB Sessions
@@ -57,9 +54,13 @@ function createApp () {
     secret: 'Pkdj3Hkd4',
     store: store
   }))
+  app.use(passport.initialize())
+  app.use(passport.session())
   app.use(express.static(path.join(__dirname, 'public')))
 
-  app.use('/', routes)
+  require('./models')
+  require('./config')
+  app.use('/', require('./routes'))
 
   // catch 404 and forward to error handler
   app.use(function (req, res, next) {
