@@ -29,7 +29,30 @@ var config = {
     ],
     dest: './public/angular'
   },
+  jade: {
+    scud: {
+      src: ['./src/**/*.jade']
+    }
+  },
   serverConfig: {}
+}
+
+/*
+ * Build Jade into HTML
+ */
+
+function buildJade () {
+  console.log(chalk.blue('Building Jade...'))
+  return gulp.src(config.jade.scud.src)
+    .pipe($.plumber())
+    .pipe($.jade())
+    .pipe($.angularTemplatecache({
+      module: 'scud.templates',
+      standalone: true,
+      root: 'views/'
+    }))
+    .pipe($.rename('templates.js'))
+    .pipe(gulp.dest(config.js.dest))
 }
 
 /*
@@ -152,6 +175,14 @@ function serve (done) {
 }
 
 /*
+ * Gulp task for rendering Jade
+ * as HTML and adding it to
+ * Angular's template cache
+ */
+
+gulp.task('jade', buildJade)
+
+/*
  * Gulp task for watching
  * changes to angular in development
  */
@@ -162,8 +193,34 @@ gulp.task('watch', function () {
     minify: false
   })
 })
+
+/*
+ * Compile angular and other
+ * javascript libraries
+ */
+
 gulp.task('js:libs', copyJsLibs)
+
+/*
+ * Start the server and watch
+ * for changes
+ */
+
 gulp.task('nodemon', nodemon)
+
+/*
+ * Start Browsersync to
+ * detect changes
+ */
+
 gulp.task('serve', serve)
 
-gulp.task('default', ['nodemon', 'serve', 'js:libs', 'watch'])
+/*
+ * Start Nodemon, Browserify,
+ * compile JS libraries, and
+ * compile angular without
+ * minification and using
+ * watchify
+ */
+
+gulp.task('default', ['nodemon', 'serve', 'js:libs', 'jade', 'watch'])
