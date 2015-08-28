@@ -31,7 +31,7 @@ var config = {
   },
   jade: {
     scud: {
-      src: ['./src/**/*.jade']
+      src: ['./src/templates/*.jade']
     }
   },
   serverConfig: {}

@@ -2,9 +2,11 @@
 
 var angular = require('angular')
 require('angular-ui-router')
+require('./controllers')
 
 var app = angular.module('SCUDApp', [
   'ui.router',
+  'scud.controllers',
   'scud.templates'
 ])
 
@@ -19,11 +21,10 @@ app.config(['$locationProvider', function ($locationProvider) {
 app.config(function ($stateProvider, $urlRouterProvider) {
   $urlRouterProvider.otherwise('/')
 
-  /*
   $stateProvider
-    .state('test', {
-      url: '/test',
-      templateUrl: 'views/test/test.html'
+    .state('home', {
+      url: '/',
+      templateUrl: 'views/home.html',
+      controller: 'HomeCtrl as home'
     })
-   */
 })
