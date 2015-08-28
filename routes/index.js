@@ -1,3 +1,4 @@
+var passport = require('passport')
 var express = require('express')
 var router = express.Router()
 
@@ -11,7 +12,7 @@ router.use('/signup', function (req, res) {
   res.render('signup', {title: 'SCUD Registry Signup'})
 })
 
-router.use(function (req, res) {
+router.use('/', passport.isLoggedIn, function (req, res) {
   res.render('index', {title: 'SCUD Registry'})
 })
 

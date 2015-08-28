@@ -14,7 +14,7 @@ router.post('/signup', function (req, res) {
     if (err) {
       res.status(500).send(err)
     } else if (competitor) {
-      res.status(403).send({message: 'You already have an account, dummy!'})
+      res.status(403).send('You already have an account, dummy!')
     } else {
       console.log('creating competitor')
       Competitor.create(req.body, function (err, competitor) {
@@ -22,7 +22,13 @@ router.post('/signup', function (req, res) {
         if (err) {
           res.status(500).send(err)
         } else {
-          res.redirect('/')
+          req.login(competitor, function (err) {
+            if (err) {
+              res.status(500).send(err)
+            } else {
+              res.redirect('/')
+            }
+          })
         }
       })
     }
