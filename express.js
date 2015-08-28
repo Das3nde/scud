@@ -13,13 +13,13 @@ function createApp () {
    * MongoDB and Mongoose Configuration
    */
 
-  var mongoose = require('mongoose')
-  mongoose.connect(MONGO_SERVER)
-
   var MONGO_SERVER = process.env.MONGO_URI
   if (!MONGO_SERVER) {
     throw new Error(chalk.red('Please specify MONGO_URI in .env file'))
   }
+
+  var mongoose = require('mongoose')
+  mongoose.connect(MONGO_SERVER)
 
   /*
    * MongoDB Sessions
