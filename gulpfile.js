@@ -25,8 +25,7 @@ var config = {
       }
     ],
     libs: [
-      './node_modules/angular/angular.js',
-      './node_modules/jquery/dist/jquery.js'
+      './node_modules/angular/angular.js'
     ],
     dest: './public/angular'
   },
