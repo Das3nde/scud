@@ -25,8 +25,8 @@ var config = {
       }
     ],
     libs: [
-      './node_modules/jquery/dist/jquery.js',
-      './node_modules/angular/angular.js'
+      './node_modules/angular/angular.js',
+      './node_modules/jquery/dist/jquery.js'
     ],
     dest: './public/angular'
   },
@@ -88,14 +88,20 @@ function buildJs (config) {
  * Gulp streams into one task
  */
 
-function javascript (watch, minify) {
+function javascript (args) {
   return merge.add(config.js.bundles.map(function (c) {
-    c.watch = watch
-    c.minify = minify
+    c.watch = args.watch
+    c.minify = args.minify
     c.dest = config.js.dest
     return buildJs(c)
   }))
 }
+
+/* JS:LIBS
+ *
+ * Compile angular and other
+ * javascript libraries
+ */
 
 function copyJsLibs () {
   return gulp.src(config.js.libs)
@@ -152,7 +158,10 @@ function serve (done) {
  */
 
 gulp.task('watch', function () {
-  javascript(true, false)
+  javascript({
+    watch: true,
+    minify: false
+  })
 })
 gulp.task('js:libs', copyJsLibs)
 gulp.task('nodemon', nodemon)
