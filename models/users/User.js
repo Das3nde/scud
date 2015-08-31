@@ -1,6 +1,21 @@
 var mongoose = require('mongoose')
 var bcrypt = require('bcrypt')
 
+var roles = [
+  'competitor',
+  'doshu',
+  'admin'
+]
+
+var ranks = [
+  'Jonokuchi',
+  'Makuuchi',
+  'Komosubi',
+  'Sekiwake',
+  'Ozeki',
+  'Yokozuna'
+]
+
 var UserSchema = mongoose.Schema({
   first_name: {
     type: String,
@@ -17,6 +32,32 @@ var UserSchema = mongoose.Schema({
   password: {
     type: String,
     required: true
+  },
+  created: {
+    type: Date,
+    required: true,
+    default: Date.now
+  },
+  stable: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Stable'
+  },
+  role: {
+    type: String,
+    required: true,
+    enum: roles,
+    default: 'competitor'
+  },
+  nards: {
+    type: Number,
+    required: true,
+    default: 0
+  },
+  rank: {
+    type: String,
+    required: true,
+    enum: ranks,
+    default: 'Jonokuchi'
   }
 })
 

@@ -2,29 +2,31 @@
 
 var angular = require('angular')
 require('angular-ui-router')
-require('./controllers')
+require('angular-ui-bootstrap')
 
-var app = angular.module('SCUDApp', [
+angular.module('SCUDApp', [
   'ui.router',
-  'scud.controllers',
-  'scud.templates'
+  'ui.bootstrap'
 ])
 
-app.config(['$logProvider', function ($logProvider) {
+.config(['$logProvider', function ($logProvider) {
   $logProvider.debugEnabled(true)
 }])
 
-app.config(['$locationProvider', function ($locationProvider) {
+.config(['$locationProvider', function ($locationProvider) {
   $locationProvider.html5Mode({enabled: true, requireBase: true})
 }])
 
-app.config(function ($stateProvider, $urlRouterProvider) {
+.config(function ($stateProvider, $urlRouterProvider) {
   $urlRouterProvider.otherwise('/')
 
   $stateProvider
     .state('home', {
       url: '/',
-      templateUrl: 'views/home.html',
-      controller: 'HomeCtrl as home'
+      template: require('./home/templates/home.jade'),
+      controller: 'HomeCtrl',
+      controllerAs: 'home'
     })
 })
+
+require('./home')
