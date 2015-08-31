@@ -42,6 +42,10 @@ var UserSchema = mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Stable'
   },
+  doshu: {
+    type: Boolean,
+    default: false
+  },
   role: {
     type: String,
     required: true,

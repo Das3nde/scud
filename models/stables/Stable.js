@@ -1,5 +1,11 @@
 var mongoose = require('mongoose')
 
+var statuses = [
+  'Pending',
+  'Active',
+  'Defunct'
+]
+
 var StableSchema = mongoose.Schema({
   name: {
     type: String,
@@ -9,6 +15,12 @@ var StableSchema = mongoose.Schema({
     type: Date,
     required: true,
     default: Date.now
+  },
+  status: {
+    type: String,
+    required: true,
+    enum: statuses,
+    default: 'Pending'
   },
   doshu: {
     type: mongoose.Schema.Types.ObjectId,
