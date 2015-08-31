@@ -3,7 +3,8 @@ button(ng-click='home.joinStable()') Join a Stable
 h1 Stables
 
 ul
-  li(ng-repeat="stable in home.stables") {{stable.name}}
+  li(ng-repeat="stable in home.stables")
+    | {{stable.name}} - Doshu: {{stable.doshu.first_name + ' ' + stable.doshu.last_name}}
 
 h1 SCUD Rankings
 

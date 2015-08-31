@@ -14,6 +14,7 @@ router.param('stable', function (req, res, next, id) {
 
 router.get('/', function (req, res, next) {
   Stable.find()
+    .populate('doshu', 'first_name last_name')
     .exec()
     .then(function (stables) {
       return res.json(stables)

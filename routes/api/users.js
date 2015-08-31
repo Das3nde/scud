@@ -3,8 +3,21 @@ var router = express.Router()
 var mongoose = require('mongoose')
 var User = mongoose.model('User')
 
+router.param('user', function (req, res, next, id) {
+  User.findOne({_id: id})
+    .exec()
+    .then(function (user) {
+      req.user = user
+      next()
+    }, next)
+})
+
 router.get('/', function (req, res, next) {
   res.send('Test')
+})
+
+router.get('/:user', function (req, res) {
+  res.json(req.user)
 })
 
 router.post('/signup', function (req, res) {
