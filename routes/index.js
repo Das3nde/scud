@@ -4,11 +4,16 @@ var router = express.Router()
 
 router.use('/api', require('./api'))
 
-router.use('/login', function (req, res) {
+router.get('/login', function (req, res) {
   res.render('login', {title: 'SCUD Registry Login'})
 })
 
-router.use('/signup', function (req, res) {
+router.get('/logout', function (req, res) {
+  req.logout()
+  res.redirect('/')
+})
+
+router.get('/signup', function (req, res) {
   res.render('signup', {title: 'SCUD Registry Signup'})
 })
 
