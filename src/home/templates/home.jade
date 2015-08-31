@@ -1,5 +1,10 @@
 button(ng-click='home.joinStable()') Join a Stable
 
+h1 Stables
+
+ul
+  li(ng-repeat="stable in home.stables") {{stable.name}}
+
 h1 SCUD Rankings
 
 h2 Makuuchi

@@ -7,6 +7,7 @@ require('angular-ui-router')
 require('angular-ui-bootstrap')
 
 angular.module('SCUDApp', [
+  'ngResource',
   'ui.router',
   'ui.bootstrap'
 ])
@@ -27,8 +28,14 @@ angular.module('SCUDApp', [
       url: '/',
       template: require('./home/templates/home.jade'),
       controller: 'HomeCtrl',
-      controllerAs: 'home'
+      controllerAs: 'home',
+      resolve: {
+        stables: function (Stable) {
+          return Stable.query().$promise
+        }
+      }
     })
 })
 
 require('./home')
+require('./models')

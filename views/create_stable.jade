@@ -1,0 +1,13 @@
+head
+  title Create a new Stable
+
+body
+  h1 Create a new Stable
+  form(name="signup" action="/api/stables" method="post")
+    //input(type="hidden" name="_csrf" value=csrftoken)
+    input(
+      placeholder="Name"
+      name="name"
+      type="text"
+      )
+    button(type="submit") Create

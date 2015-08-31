@@ -12,6 +12,10 @@ router.get('/signup', function (req, res) {
   res.render('signup', {title: 'SCUD Registry Signup'})
 })
 
+router.get('/create-stable', function (req, res) {
+  res.render('create_stable')
+})
+
 router.use('/', passport.isLoggedIn, function (req, res) {
   res.render('index', {title: 'SCUD Registry'})
 })
