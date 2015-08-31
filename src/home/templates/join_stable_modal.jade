@@ -1,9 +1,6 @@
 h1 Join Stable
 
-select
-  option Option 1
-  option Option 2
-  option Option 3
+select(ng-options='stable.name for stable in modal.stables' ng-model='modal.chosenStable')
 
 hr
 

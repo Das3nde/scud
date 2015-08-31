@@ -3,10 +3,16 @@
 // @ngInject
 module.exports = function ($scope, $modal, stables) {
   this.stables = stables
-
   this.joinStable = () => {
     let modalInstance = $modal.open({
-      template: require('./templates/join_stable_modal.jade')
+      template: require('./templates/join_stable_modal.jade'),
+      controller: 'JoinStableModalCtrl',
+      controllerAs: 'modal',
+      resolve: {
+        stables: function () {
+          return stables
+        }
+      }
     })
 
     modalInstance.result.then(function (selection) {
