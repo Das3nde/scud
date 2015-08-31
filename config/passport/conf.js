@@ -1,14 +1,14 @@
 var mongoose = require('mongoose')
-var Competitor = mongoose.model('Competitor')
+var User = mongoose.model('User')
 var passport = require('passport')
 
-passport.serializeUser(function (competitor, done) {
-  done(null, competitor.id)
+passport.serializeUser(function (user, done) {
+  done(null, user.id)
 })
 
 passport.deserializeUser(function (id, done) {
-  Competitor.findById(id, function (err, competitor) {
-    done(err, competitor)
+  User.findById(id, function (err, user) {
+    done(err, user)
   })
 })
 

@@ -1,1 +1,1 @@
-require('./competitors')
+require('./users')

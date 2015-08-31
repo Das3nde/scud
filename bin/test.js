@@ -1,4 +1,4 @@
-if(!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
+if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
   require('dotenv').load()
 }
 var MONGO_SERVER = process.env.MONGO_URI
