@@ -1,6 +1,8 @@
 'use strict'
 
 var angular = require('angular')
+
+require('babelify/polyfill')
 require('angular-ui-router')
 require('angular-ui-bootstrap')
 

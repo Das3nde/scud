@@ -37,7 +37,26 @@ var config = {
       ]
     }
   },
+  less: [
+    {
+      src: ['./node_modules/bootstrap/dist/css/bootstrap.css'],
+      dest: './public/stylesheets/css/'
+    }
+  ],
   serverConfig: {}
+}
+
+function buildCss (minify, _less) {
+  console.log(chalk.blue('Building CSS...'))
+  var less = _less || config.less[0]
+
+  return gulp.src(less.src)
+    .pipe($.plumber())
+    .pipe($.sourcemaps.init())
+    .pipe($.less())
+    .pipe($.if(minify, $.minifyCss()))
+    .pipe($.sourcemaps.write('./'))
+    .pipe(gulp.dest(less.dest))
 }
 
 /*
@@ -177,6 +196,10 @@ function serve (done) {
   }, done)
 }
 
+gulp.task('less', function () {
+  return buildCss(false)
+})
+
 /*
  * Gulp task for rendering Jade
  * as HTML and adding it to
@@ -191,7 +214,7 @@ gulp.task('jade', buildJade)
  */
 
 gulp.task('watch', function () {
-  javascript({
+  return javascript({
     watch: true,
     minify: false
   })
@@ -226,4 +249,4 @@ gulp.task('serve', serve)
  * watchify
  */
 
-gulp.task('default', ['nodemon', 'serve', 'js:libs', 'jade', 'watch'])
+gulp.task('default', ['nodemon', 'serve', 'js:libs', 'jade', 'less', 'watch'])

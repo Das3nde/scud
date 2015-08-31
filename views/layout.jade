@@ -17,16 +17,19 @@ html
     link(rel='canonical'
       href='http://www.scudregistry.org')
 
+    link(rel='stylesheet' type='text/css'
+      href='/stylesheets/css/bootstrap.css')
+
     script(type='text/javascript'
       src='/angular/libs.js')
 
     script(type='text/javascript'
       src='/angular/app.js')
 
-    script(type='text/javascript'
+    //- script(type='text/javascript'
       src='/angular/templates.js')
 
     block head
 
- body(ng-app='SCUDApp' lang='en' ng-strict-di)
+  body(ng-app='SCUDApp' lang='en' ng-strict-di)
     block body
