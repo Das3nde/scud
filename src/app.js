@@ -35,7 +35,38 @@ angular.module('SCUDApp', [
         }
       }
     })
+    .state('login', {
+      url: '/login',
+      template: require('./auth/templates/login.jade'),
+      controller: 'LoginCtrl',
+      controllerAs: 'login'
+    })
+})
+
+// Using $state directly causes a circular dependency error
+// Must use $injector to get $state when using ui-router
+
+.factory('authHttpResponseInterceptor', function ($q, $injector) {
+  return {
+    response: function (response) {
+      if (response.status === 401) {
+        console.log('401: Unauthorized')
+      }
+      return response || $q.when(response)
+    },
+    responseError: function (rejection) {
+      if (rejection.status === 401) {
+        $injector.get('$state').transitionTo('login')
+        return $q.reject(rejection)
+      }
+    }
+  }
+})
+
+.config(function ($httpProvider) {
+  $httpProvider.interceptors.push('authHttpResponseInterceptor')
 })
 
 require('./home')
+require('./auth')
 require('./models')
