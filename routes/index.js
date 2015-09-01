@@ -38,10 +38,6 @@ router.get('/logout', function (req, res) {
   res.redirect('/login')
 })
 
-router.get('/signup', function (req, res) {
-  res.render('signup', {title: 'SCUD Registry Signup'})
-})
-
 router.get('/create-stable', function (req, res) {
   res.render('create_stable')
 })

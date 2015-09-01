@@ -2,6 +2,8 @@
 
 var angular = require('angular')
 
+// Babelify for ES6 Syntax
+
 require('babelify/polyfill')
 require('angular-ui-router')
 require('angular-ui-bootstrap')
@@ -40,6 +42,12 @@ angular.module('SCUDApp', [
       template: require('./auth/templates/login.jade'),
       controller: 'LoginCtrl',
       controllerAs: 'login'
+    })
+    .state('signup', {
+      url: '/signup',
+      template: require('./auth/templates/signup.jade'),
+      controller: 'LoginCtrl',
+      controllerAs: 'signup'
     })
 })
 

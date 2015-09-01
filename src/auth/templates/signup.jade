@@ -1,0 +1,24 @@
+h1 SCUD Registry Signup
+form(name="signup" action="/api/users" method="post")
+  //input(type="hidden" name="_csrf" value=csrftoken)
+  input(
+    placeholder="First Name"
+    name="first_name"
+    type="text"
+    )
+  input(
+    placeholder="Last Name"
+    name="last_name"
+    type="text"
+    )
+  input(
+    placeholder="Email"
+    name="email"
+    type="email"
+    )
+  input( 
+    placeholder="Password"
+    name="password"
+    type="password"
+    )
+  button(type="submit") Signup
