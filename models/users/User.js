@@ -49,6 +49,10 @@ var UserSchema = mongoose.Schema({
     type: Boolean,
     default: false
   },
+  ronin: {
+    type: Boolean,
+    default: false
+  },
   role: {
     type: String,
     required: true,

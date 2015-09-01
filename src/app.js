@@ -30,11 +30,11 @@ angular.module('SCUDApp', [
       url: '/',
       template: require('./home/templates/home.jade'),
       controller: 'HomeCtrl',
-      controllerAs: 'home',
+      controllerAs: 'vm',
       resolve: {
         stables: function (Stable) {
           return Stable.query().$promise
-        }/*,
+        },
         user: function ($q, $http) {
           var d = $q.defer()
           $http.get('/user').then(function (user) {
@@ -43,20 +43,19 @@ angular.module('SCUDApp', [
 
           return d.promise
         }
-       */
       }
     })
     .state('login', {
       url: '/login',
       template: require('./auth/templates/login.jade'),
       controller: 'LoginCtrl',
-      controllerAs: 'login'
+      controllerAs: 'vm'
     })
     .state('signup', {
       url: '/signup',
       template: require('./auth/templates/signup.jade'),
       controller: 'LoginCtrl',
-      controllerAs: 'signup'
+      controllerAs: 'vm'
     })
 })
 

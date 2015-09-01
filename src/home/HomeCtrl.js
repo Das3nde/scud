@@ -1,7 +1,9 @@
 'use strict'
 
 // @ngInject
-module.exports = function ($scope, $modal, stables) {
+module.exports = function ($scope, $modal, stables, user) {
+  this.user = user
+  console.log(user)
   this.stables = stables
   this.joinStable = () => {
     let modalInstance = $modal.open({
