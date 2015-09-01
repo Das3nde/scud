@@ -10,6 +10,23 @@ function createApp () {
   var passport = require('passport')
 
   /*
+  var mailgun = require('mailgun-js')({
+    apiKey: process.env.MAILGUN_API_KEY,
+    domain: process.env.MAILGUN_DOMAIN_NAME
+  })
+
+  mailgun.messages().send({
+    from: 'Test <test@samples.mailgun.org>',
+    to: 'justin@elevenjames.com',
+    subject: 'Test',
+    text: 'Testing Mailgun'
+  }, function (err, body) {
+    if (err) console.log('Error sending email', err)
+      else console.log('Email ID', body.id)
+  })
+  */
+
+  /*
    * MongoDB and Mongoose Configuration
    */
 

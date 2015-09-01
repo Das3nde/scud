@@ -2,9 +2,10 @@ var mongoose = require('mongoose')
 var bcrypt = require('bcrypt')
 
 var roles = [
-  'competitor',
-  'doshu',
-  'admin'
+  'Pending',
+  'Competitor',
+  'Doshu',
+  'Admin'
 ]
 
 var ranks = [
@@ -27,6 +28,7 @@ var UserSchema = mongoose.Schema({
   },
   email: {
     type: String,
+    lowercase: true,
     required: true
   },
   password: {
@@ -50,7 +52,7 @@ var UserSchema = mongoose.Schema({
     type: String,
     required: true,
     enum: roles,
-    default: 'competitor'
+    default: 'Pending'
   },
   nards: {
     type: Number,
@@ -62,6 +64,7 @@ var UserSchema = mongoose.Schema({
     required: true,
     enum: ranks,
     default: 'Jonokuchi'
+
   }
 })
 
