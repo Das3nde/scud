@@ -7,30 +7,36 @@ var User = mongoose.model('User')
 
 router.use('/api', passport.isLoggedIn, require('./api'))
 
+router.get('/user', function (req, res) {
+  res.json(req.user)
+})
+
 router.post('/login', function (req, res) {
-  User.findOne({email: req.body.email}, function (err, user) {
-    if (err) {
-      res.status(500).send(err)
-    } else if (!user || user.role === 'Pending') {
-      res.status(403).send({message: 'Sorry, we could not find your account!'})
-    } else {
-      user.comparePassword(req.body.password, function (err, isValid) {
-        if (err) {
-          res.status(500).send(err)
-        } else if (isValid) {
-          req.login(user, function (err) {
-            if (err) {
-              res.status(500).send(err)
-            } else {
-              res.redirect('/')
-            }
-          })
-        } else {
-          res.status(403).send({message: 'Invalid password'})
-        }
-      })
-    }
-  })
+  User.findOne({email: req.body.email})
+    .select('password')
+    .exec(function (err, user) {
+      if (err) {
+        res.status(500).send(err)
+      } else if (!user || user.role === 'Pending') {
+        res.status(403).send({message: 'Sorry, we could not find your account!'})
+      } else {
+        user.comparePassword(req.body.password, function (err, isValid) {
+          if (err) {
+            res.status(500).send(err)
+          } else if (isValid) {
+            req.login(user, function (err) {
+              if (err) {
+                res.status(500).send(err)
+              } else {
+                res.redirect('/')
+              }
+            })
+          } else {
+            res.status(403).send({message: 'Invalid password'})
+          }
+        })
+      }
+    })
 })
 
 router.get('/logout', function (req, res) {
@@ -76,10 +82,6 @@ router.post('/signup', function (req, res) {
   })
 })
 
-router.get('/create-stable', function (req, res) {
-  res.render('create_stable')
-})
-
 router.get('/confirm/:id', function (req, res) {
   console.log('Confirming id: ', req.params.id)
   User.findOne({_id: req.params.id}, function (err, user) {
@@ -101,6 +103,10 @@ router.get('/confirm/:id', function (req, res) {
       res.redirect('/login')
     }
   })
+})
+
+router.get('/create-stable', function (req, res) {
+  res.render('create_stable')
 })
 
 router.use('/', function (req, res) {

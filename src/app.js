@@ -34,7 +34,16 @@ angular.module('SCUDApp', [
       resolve: {
         stables: function (Stable) {
           return Stable.query().$promise
+        }/*,
+        user: function ($q, $http) {
+          var d = $q.defer()
+          $http.get('/user').then(function (user) {
+            d.resolve(user.data)
+          })
+
+          return d.promise
         }
+       */
       }
     })
     .state('login', {
