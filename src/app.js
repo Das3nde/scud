@@ -35,7 +35,15 @@ angular.module('SCUDApp', [
         stables: function (Stable) {
           return Stable.query().$promise
         },
-        user: function ($q, $http) {
+        /*
+        users: function (User) {
+          return User.query().$promise
+        },
+       */
+        users: function (RanksService) {
+          return RanksService.initialize()
+        },
+        currentUser: function ($q, $http) {
           var d = $q.defer()
           $http.get('/user').then(function (user) {
             d.resolve(user.data)
@@ -82,6 +90,8 @@ angular.module('SCUDApp', [
 .config(function ($httpProvider) {
   $httpProvider.interceptors.push('authHttpResponseInterceptor')
 })
+
+.service('RanksService', require('./RanksService'))
 
 require('./home')
 require('./auth')

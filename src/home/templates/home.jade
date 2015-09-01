@@ -1,8 +1,10 @@
-h1 Welcome, {{vm.user.first_name}}
+h1 Welcome, {{vm.currentUser.first_name}}
 
 div(ng-if='!vm.user.stable')
   h2 You are currently NOT in a stable
   h3 In order to be ranked, you must first join a stable
+
+button(ng-hide="vm.user.stable" ng-click='vm.joinStable()') Join a Stable
 
 h1 Stables
 
@@ -10,28 +12,23 @@ ul
   li(ng-repeat="stable in vm.stables")
     | {{stable.name}} - Doshu: {{stable.doshu.first_name + ' ' + stable.doshu.last_name}}
 
-button(ng-hide="vm.user.stable" ng-click='vm.joinStable()') Join a Stable
-
 h1 SCUD Rankings
 
 h2 Makuuchi
 
 h3 Yokozuna
 p -
+
 h3 Ozeki
 p -
 h3 Sekiwake
 p -
+
 h3 Komusubi
-p -
+jk-filter-ranks(rank='Komusubi' users='vm.users')
 
 h2 Makushita
-p -
+jk-filter-ranks(rank='Makushita' users='vm.users')
 
 h2 Jonokuchi
-ul
-  li Justin Knutson
-  li Rodrigo Menezes
-  li Valeri Karpov
-  li Dan Dhore
-  li Tiberius Borden
+jk-filter-ranks(rank='Jonokuchi' users='vm.users')
