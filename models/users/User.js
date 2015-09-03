@@ -10,7 +10,7 @@ var roles = [
 
 var ranks = [
   'Jonokuchi',
-  'Makuuchi',
+  'Makushita',
   'Komosubi',
   'Sekiwake',
   'Ozeki',

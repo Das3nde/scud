@@ -1,10 +1,19 @@
 'use strict'
 
 // @ngInject
-module.exports = function ($scope, $modal, stables, users, currentUser) {
+module.exports = function ($scope, $http, $modal, stables, users, currentUser, RanksService) {
   this.stables = stables
-  this.users = users
+  $scope.users = users
   this.currentUser = currentUser
+
+  /*
+  RanksService
+    .query(this.users, {test: 'Test'})
+    .then(function (result) {
+      $scope.users.pop()
+      console.log(result, $scope.users)
+    })
+   */
 
   this.filterRank = function (rank) {
     return this.users.filter(function (user) {
@@ -14,7 +23,7 @@ module.exports = function ($scope, $modal, stables, users, currentUser) {
 
   this.joinStable = () => {
     let modalInstance = $modal.open({
-      template: require('./templates/join_stable_modal.jade'),
+      template: require('./templates/join-stable-modal.jade'),
       controller: 'JoinStableModalCtrl',
       controllerAs: 'modal',
       resolve: {
@@ -24,7 +33,13 @@ module.exports = function ($scope, $modal, stables, users, currentUser) {
       }
     })
 
-    modalInstance.result.then(function (selection) {
+    modalInstance.result.then(function (chosenStable) {
+      console.log(chosenStable)
+      $http.post('/join-stable', {stable: chosenStable._id})
+        .success(function (err, res) {
+          if (err) throw err
+          console.log(res)
+        })
     }, function () {
       console.log('Modal dismissed at: ' + new Date())
     })

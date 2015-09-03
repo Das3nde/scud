@@ -14,6 +14,7 @@ router.param('user', function (req, res, next, id) {
 
 router.get('/', function (req, res) {
   User.find({})
+    .populate('stable', 'name')
     .exec()
     .then(function (users) {
       res.json(users)

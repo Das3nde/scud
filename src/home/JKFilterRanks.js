@@ -11,9 +11,8 @@ module.exports = function () {
     },
     template: require('./templates/jk-filter-ranks.jade'),
     link: function (scope, elem, attrs) {
-      console.log(scope.users)
       scope.rankedUsers = scope.users.filter(function (user) {
-        return user.rank === scope.rank
+        return user.stable && (user.rank === scope.rank)
       })
     }
   }

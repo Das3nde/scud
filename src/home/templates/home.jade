@@ -1,5 +1,7 @@
 h1 Welcome, {{vm.currentUser.first_name}}
 
+span {{users}}
+
 div(ng-if='!vm.user.stable')
   h2 You are currently NOT in a stable
   h3 In order to be ranked, you must first join a stable
@@ -17,18 +19,19 @@ h1 SCUD Rankings
 h2 Makuuchi
 
 h3 Yokozuna
-p -
+jk-filter-ranks(rank='Yokozuna' users='users')
 
 h3 Ozeki
-p -
+jk-filter-ranks(rank='Ozeki' users='users')
+
 h3 Sekiwake
-p -
+jk-filter-ranks(rank='Sekiwake' users='users')
 
 h3 Komusubi
-jk-filter-ranks(rank='Komusubi' users='vm.users')
+jk-filter-ranks(rank='Komusubi' users='users')
 
 h2 Makushita
-jk-filter-ranks(rank='Makushita' users='vm.users')
+jk-filter-ranks(rank='Makushita' users='users')
 
 h2 Jonokuchi
-jk-filter-ranks(rank='Jonokuchi' users='vm.users')
+jk-filter-ranks(rank='Jonokuchi' users='users')
