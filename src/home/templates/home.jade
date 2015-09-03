@@ -1,5 +1,7 @@
 h1 Welcome, {{vm.currentUser.first_name}}
 
+button(ng-click='vm.newGame()') Add New Game
+
 span {{users}}
 
 div(ng-if='!vm.user.stable')

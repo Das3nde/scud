@@ -1,3 +1,4 @@
 p(ng-hide='rankedUsers.length') -
 ul
-  li(ng-repeat='user in rankedUsers') {{user.first_name}} {{user.last_name}} ({{user.stable.name}})
+  li(ng-repeat='user in rankedUsers')
+    | {{user.first_name}} {{user.last_name}} ({{user.stable.name}}) {{user.nards}}

@@ -40,6 +40,15 @@ module.exports = function ($scope, $http, $modal, stables, users, currentUser, R
           if (err) throw err
           console.log(res)
         })
+    })
+  }
+
+  this.newGame = () => {
+    let modalInstance = $modal.open({
+      template: require('./templates/new-game-modal.jade')
+    })
+
+    modalInstance.result.then(function () {
     }, function () {
       console.log('Modal dismissed at: ' + new Date())
     })
