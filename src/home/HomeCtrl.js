@@ -6,15 +6,6 @@ module.exports = function ($scope, $http, $modal, stables, users, currentUser, R
   $scope.users = users
   this.currentUser = currentUser
 
-  /*
-  RanksService
-    .query(this.users, {test: 'Test'})
-    .then(function (result) {
-      $scope.users.pop()
-      console.log(result, $scope.users)
-    })
-   */
-
   this.filterRank = function (rank) {
     return this.users.filter(function (user) {
       return user.rank === rank
@@ -45,10 +36,13 @@ module.exports = function ($scope, $http, $modal, stables, users, currentUser, R
 
   this.newGame = () => {
     let modalInstance = $modal.open({
-      template: require('./templates/new-game-modal.jade')
+      template: require('./templates/new-game-modal.jade'),
+      controller: 'NewGameModalCtrl',
+      controllerAs: 'vm'
     })
 
     modalInstance.result.then(function () {
+      // Submit game to back-end
     }, function () {
       console.log('Modal dismissed at: ' + new Date())
     })

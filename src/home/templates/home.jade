@@ -4,11 +4,11 @@ button(ng-click='vm.newGame()') Add New Game
 
 span {{users}}
 
-div(ng-if='!vm.user.stable')
+div(ng-if='!vm.currentUser.stable')
   h2 You are currently NOT in a stable
   h3 In order to be ranked, you must first join a stable
 
-button(ng-hide="vm.user.stable" ng-click='vm.joinStable()') Join a Stable
+button(ng-hide="vm.currentUser.stable" ng-click='vm.joinStable()') Join a Stable
 
 h1 Stables
 
