@@ -41,7 +41,8 @@ module.exports = function ($scope, $http, $modal, stables, users, currentUser, R
       controllerAs: 'vm'
     })
 
-    modalInstance.result.then(function () {
+    modalInstance.result.then(function (game) {
+      console.log(game.winner)
       // Submit game to back-end
     }, function () {
       console.log('Modal dismissed at: ' + new Date())

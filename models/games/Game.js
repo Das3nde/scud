@@ -16,6 +16,10 @@ var GameSchema = mongoose.Schema({
     required: true,
     ref: 'User'
   },
+  victory_condition: {
+    type: String,
+    required: true
+  },
   nards: {
     type: Boolean,
     required: true,
