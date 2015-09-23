@@ -1,8 +1,10 @@
 h1 Welcome, {{vm.currentUser.first_name}}
 
-button(ng-click='vm.newGame()') Add New Game
+input(ng-model='test' typeahead='user as (user.first_name + " " + user.last_name) for user in vm.users')
 
-span {{users}}
+h2 {{test.first_name}}
+
+button(ng-click='vm.newGame()') Add New Game
 
 div(ng-if='!vm.currentUser.stable')
   h2 You are currently NOT in a stable
@@ -21,19 +23,19 @@ h1 SCUD Rankings
 h2 Makuuchi
 
 h3 Yokozuna
-jk-filter-ranks(rank='Yokozuna' users='users')
+jk-filter-ranks(rank='Yokozuna' users='vm.users')
 
 h3 Ozeki
-jk-filter-ranks(rank='Ozeki' users='users')
+jk-filter-ranks(rank='Ozeki' users='vm.users')
 
 h3 Sekiwake
-jk-filter-ranks(rank='Sekiwake' users='users')
+jk-filter-ranks(rank='Sekiwake' users='vm.users')
 
 h3 Komusubi
-jk-filter-ranks(rank='Komusubi' users='users')
+jk-filter-ranks(rank='Komusubi' users='vm.users')
 
 h2 Makushita
-jk-filter-ranks(rank='Makushita' users='users')
+jk-filter-ranks(rank='Makushita' users='vm.users')
 
 h2 Jonokuchi
-jk-filter-ranks(rank='Jonokuchi' users='users')
+jk-filter-ranks(rank='Jonokuchi' users='vm.users')

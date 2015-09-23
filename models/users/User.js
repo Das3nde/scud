@@ -73,6 +73,10 @@ var UserSchema = mongoose.Schema({
   }
 })
 
+UserSchema.virtual('full_name').get(function () {
+  return this.first_name + ' ' + this.last_name
+})
+
 UserSchema.method('comparePassword', function (_password, cb) {
   var user = this
   bcrypt.compare(_password, user.password, function (err, isMatch) {

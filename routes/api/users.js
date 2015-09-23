@@ -17,7 +17,7 @@ router.get('/', function (req, res) {
     .populate('stable', 'name')
     .exec()
     .then(function (users) {
-      res.json(users)
+      res.send(users)
     })
 })
 

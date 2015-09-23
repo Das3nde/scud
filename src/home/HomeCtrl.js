@@ -2,17 +2,18 @@
 
 // @ngInject
 module.exports = function ($scope, $http, $modal, stables, users, currentUser, RanksService) {
-  this.stables = stables
-  $scope.users = users
-  this.currentUser = currentUser
+  let vm = this
+  vm.stables = stables
+  vm.users = users
+  vm.currentUser = currentUser
 
-  this.filterRank = function (rank) {
+  vm.filterRank = function (rank) {
     return this.users.filter(function (user) {
       return user.rank === rank
     })
   }
 
-  this.joinStable = () => {
+  vm.joinStable = () => {
     let modalInstance = $modal.open({
       template: require('./templates/join-stable-modal.jade'),
       controller: 'JoinStableModalCtrl',
@@ -34,7 +35,7 @@ module.exports = function ($scope, $http, $modal, stables, users, currentUser, R
     })
   }
 
-  this.newGame = () => {
+  vm.newGame = () => {
     let modalInstance = $modal.open({
       template: require('./templates/new-game-modal.jade'),
       controller: 'NewGameModalCtrl',
