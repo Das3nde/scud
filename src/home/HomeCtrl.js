@@ -39,12 +39,21 @@ module.exports = function ($scope, $http, $modal, stables, users, currentUser, R
     let modalInstance = $modal.open({
       template: require('./templates/new-game-modal.jade'),
       controller: 'NewGameModalCtrl',
-      controllerAs: 'vm'
+      controllerAs: 'vm',
+      resolve: {
+        users: function () {
+          return users
+        }
+      }
     })
 
     modalInstance.result.then(function (game) {
-      console.log(game.winner)
-      // Submit game to back-end
+      console.log(game)
+      $http.post('/api/games', {game: game})
+        .success(function (err, res) {
+          if (err) throw err
+          console.log(res)
+        })
     }, function () {
       console.log('Modal dismissed at: ' + new Date())
     })

@@ -25,6 +25,7 @@ router.get('/', function (req, res, next) {
 */
 
 router.post('/', function (req, res) {
+  console.log(req.body)
   res.sendStatus(202)
   /*
   Game.create({
