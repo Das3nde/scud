@@ -35,6 +35,9 @@ angular.module('SCUDApp', [
         stables: function (Stable) {
           return Stable.query().$promise
         },
+        games: function(Game) {
+          return Game.query().$promise
+        },
         /*
         users: function (User) {
           return User.query().$promise

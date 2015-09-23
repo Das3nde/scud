@@ -2,7 +2,7 @@ var express = require('express')
 var router = express.Router()
 
 var mongoose = require('mongoose')
-//var Game = mongoose.model('Game')
+var Games = mongoose.model('Game')
 
 /*
 router.param('stable', function (req, res, next, id) {
@@ -13,16 +13,15 @@ router.param('stable', function (req, res, next, id) {
       next()
     }, next)
 })
+*/
 
 router.get('/', function (req, res, next) {
-  Stable.find()
-    .populate('doshu', 'first_name last_name')
+  Games.find()
     .exec()
-    .then(function (stables) {
-      return res.json(stables)
+    .then(function (games) {
+      return res.json(games)
     }, next)
 })
-*/
 
 router.post('/', function (req, res) {
   console.log(req.body)
