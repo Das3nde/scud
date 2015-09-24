@@ -50,6 +50,9 @@ module.exports = function ($scope, $http, $modal, stables, users, games, current
 
     modalInstance.result.then(function (game) {
       console.log(game)
+      game.winner = game.winner._id
+      game.loser = game.loser._id
+
       $http.post('/api/games', {game: game})
         .success(function (err, res) {
           if (err) throw err
