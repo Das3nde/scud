@@ -20,6 +20,11 @@ var GameSchema = mongoose.Schema({
     type: String,
     required: true
   },
+  interstable: {
+    type: Boolean,
+    required: true,
+    default: false
+  },
   nards: {
     type: Boolean,
     required: true,
@@ -29,11 +34,6 @@ var GameSchema = mongoose.Schema({
     type: Number,
     required: false,
     default: 1
-  },
-  interstable: {
-    type: Boolean,
-    required: true,
-    default: false
   }
 })
 

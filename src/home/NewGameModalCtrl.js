@@ -22,6 +22,7 @@ module.exports = function ($scope, $modalInstance, $http, users) {
     winner: '',
     loser: '',
     victory_condition: 'SCUD',
+    advantaged: true,
     notes: ''
   }
 
