@@ -39,31 +39,21 @@ router.post('/', function (req, res) {
    * valid data for these objects.
    */
 
-  var getWinner = function (callback) {
-    console.log(chalk.yellow('Retrieving winning player'))
-    Users
-      .findOne({_id: game.winner})
-      .populate('stable', 'name')
-      .exec(function (err, winner) {
-        if (err) callback(err)
-          else callback(null, winner)
-      })
-  }
-
-  var getLoser = function (callback) {
-    console.log(chalk.yellow('Retrieving losing player'))
-    Users
-      .findOne({_id: game.loser})
-      .populate('stable', 'name')
-      .exec(function (err, loser) {
-        if (err) callback(err)
-          else callback(null, loser)
-      })
-  }
-
   async.series({
-    winner: getWinner,
-    loser: getLoser
+    winner: function (callback) {
+      console.log(chalk.yellow('Retrieving winning player'))
+      Users
+        .findOne({_id: game.winner})
+        .populate('stable', 'name')
+        .exec(callback)
+    },
+    loser: function (callback) {
+      console.log(chalk.yellow('Retrieving losing player'))
+      Users
+        .findOne({_id: game.loser})
+        .populate('stable', 'name')
+        .exec(callback)
+    }
   }, function (err, results) {
     if (err) return res.status(500).send(err)
 
@@ -143,7 +133,7 @@ router.post('/', function (req, res) {
        * and are of suitable rank
        */
 
-      var nards = ([
+      game.nards = ([
         'Full Clear',
         'Perfect SCUD',
         'Semi-perfect SCUD',
@@ -155,7 +145,9 @@ router.post('/', function (req, res) {
         'Matte'
       ].indexOf(game.victory_condition) > -1)
 
-      if (nards) {
+      game.nards_value = game.nards ? loser.nards : 1
+
+      if (game.nards) {
         console.log(chalk.yellow('NARDS!'))
         winner.nards += loser.nards
         loser.nards = 0
@@ -190,45 +182,35 @@ router.post('/', function (req, res) {
       winner.rank = wRank
       loser.rank = lRank
 
-      async.series([
-        function (callback) {
-          winner.save(function (err, winner) {
-            if (err) callback(err)
-              else callback(null)
-          })
-        },
-        function (callback) {
-          loser.save(function (err, loser) {
-            if (err) callback(err)
-              else callback(null)
-          })
-        }
-      ], function (err, results) {
-        console.log(chalk.blue('Now returning results'))
-        if (err) {
-          return res.status(500).send(err)
-        } else {
-          return res.sendStatus(200)
-        }
+      game.interstable = !(winner.stable.id === loser.stable.id)
+      Games.create(game, function (err, _game) {
+        if (err) return res.status(500).send(err)
+        async.series([
+          function (callback) {
+            winner.game_history.push(_game.id)
+            winner.save(function (err, winner) {
+              if (err) callback(err)
+                else callback(null)
+            })
+          },
+          function (callback) {
+            loser.game_history.push(_game.id)
+            loser.save(function (err, loser) {
+              if (err) callback(err)
+                else callback(null)
+            })
+          }
+        ], function (err, results) {
+          console.log(chalk.blue('Now returning results'))
+          if (err) return res.status(500).send(err)
+            else return res.sendStatus(200)
+        })
       })
     })
   })
-
-  /*
-  Game.create({
-    name: req.body.name,
-    doshu: req.user._id
-  }, function (err, stable) {
-    if (err) {
-      res.status(500).send(err)
-    } else {
-      res.redirect('/')
-    }
-  })
- */
 })
 
-var calcRank = function (args, callback) {
+function calcRank (args, callback) {
   console.log(chalk.blue('Calculating rank changes...'))
 
   var _winner = args.winner

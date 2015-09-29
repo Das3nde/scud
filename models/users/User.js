@@ -80,7 +80,13 @@ var UserSchema = mongoose.Schema({
     type: Number,
     required: false,
     default: 0
-  }
+  },
+  game_history: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Game'
+    }
+  ]
 })
 
 UserSchema.virtual('full_name').get(function () {
