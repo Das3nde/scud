@@ -1,10 +1,14 @@
 var express = require('express')
 var router = express.Router()
 var async = require('async')
+var chalk = require('chalk')
 
 var mongoose = require('mongoose')
 var Games = mongoose.model('Game')
 var Users = mongoose.model('User')
+
+var makushita = ['Jonokuchi', 'Makushita']
+var makuuchi = ['Komusubi', 'Sekiwake', 'Ozeki', 'Yokozuna']
 
 /*
 router.param('stable', function (req, res, next, id) {
@@ -26,6 +30,7 @@ router.get('/', function (req, res, next) {
 })
 
 router.post('/', function (req, res) {
+  console.log(chalk.blue('Received a new game'))
   var game = req.body.game
 
   /*
@@ -35,6 +40,7 @@ router.post('/', function (req, res) {
    */
 
   var getWinner = function (callback) {
+    console.log(chalk.yellow('Retrieving winning player'))
     Users
       .findOne({_id: game.winner})
       .populate('stable', 'name')
@@ -45,6 +51,7 @@ router.post('/', function (req, res) {
   }
 
   var getLoser = function (callback) {
+    console.log(chalk.yellow('Retrieving losing player'))
     Users
       .findOne({_id: game.loser})
       .populate('stable', 'name')
@@ -58,10 +65,9 @@ router.post('/', function (req, res) {
     winner: getWinner,
     loser: getLoser
   }, function (err, results) {
-    if (err) {
-      res.status(500).send(err)
-      return
-    }
+    if (err) return res.status(500).send(err)
+
+    console.log(chalk.blue('Determining game outcome'))
 
     var winner = results.winner
     var loser = results.loser
@@ -73,8 +79,6 @@ router.post('/', function (req, res) {
      */
 
     function suitableRanks (rank1, rank2) {
-      var makushita = ['Jonokuchi', 'Makushita']
-      var makuuchi = ['Komusubi', 'Sekiwake', 'Ozeki', 'Yokozuna']
 
       var validator = {
         Jonokuchi: makushita,
@@ -89,29 +93,33 @@ router.post('/', function (req, res) {
 
     if (winner.stable.id === loser.stable.id) {
 
+      console.log(chalk.green('Intra Stable Game; VALID'))
+
       /*
       * INTRA-Stable game is VALID
       */
 
       winner.nards++
-      winner.save(function (err) {
-        // @TODO Handle error
-        if (err) res.status(500).send(err)
-          else return res.sendStatus(202)
-      })
-    } else if (winner.nards < 6 || loser.nards < 6) {
+    } else if (winner.nards < 5 || loser.nards < 5) {
+
+      console.log(chalk.red('Inter Stable Game; INVALID nards'))
 
       /*
       * INTER-Stable game is INVALID. Players
-      * must have nards > 6
+      * must have nards >= 4
       */
-      console.log('Invalid game - nards < 6')
 
-      return res.status(403).send(
-        'Invalid game - Inter-stable games can only be played ' +
-        'between players with 5 or more stacks of the nards.'
+      res.status(403).send(
+        {
+          message:
+            'Invalid game - Inter-stable games can only be played ' +
+            'between players with 5 or more stacks of the nards.'
+        }
       )
+      return
     } else if (!suitableRanks(winner.rank, loser.rank)) {
+
+      console.log(chalk.red('Inter Stable Game; INVALID ranks'))
 
       /*
        * INTER-Stable game is INVALID. Players
@@ -126,6 +134,8 @@ router.post('/', function (req, res) {
           loser.rank
       })
     } else {
+
+      console.log(chalk.green('Inter Stable Game; VALID'))
 
       /*
        * INTER-Stable game is VALID.
@@ -143,19 +153,65 @@ router.post('/', function (req, res) {
         'No Contest',
         'Cupping',
         'Matte'
-      ].indexOf(game.victory_condition) !== -1)
+      ].indexOf(game.victory_condition) > -1)
 
       if (nards) {
-        // @TODO Winner Takes Loser's Nards
-        res.sendStatus(200)
+        console.log(chalk.yellow('NARDS!'))
+        winner.nards += loser.nards
+        loser.nards = 0
       } else {
         loser.nards--
-        loser.save(function (err) {
-          if (err) return res.status(500).send(err)
-            else return res.sendStatus(202)
-        })
       }
     }
+
+    calcRank({
+      winner: winner,
+      loser: loser,
+      victory_condition: game.victory_condition,
+      interstable: !(winner.stable.id === loser.stable.id)
+    }, function (wRank, lRank) {
+      console.log(chalk.blue('New ranks are:'))
+      console.log(chalk.green('Winner '), wRank)
+      console.log(chalk.red('Loser '), lRank)
+
+      if (wRank === 'Komusubi') {
+        winner.komusubi_counter++
+      }
+
+      if (lRank === 'Komusubi') {
+        if (loser.rank === 'Komusubi') {
+          loser.komusubi_counter++
+        } else {
+          loser.former_rank = loser.rank
+          loser.komusubi_counter = 0
+        }
+      }
+
+      winner.rank = wRank
+      loser.rank = lRank
+
+      async.series([
+        function (callback) {
+          winner.save(function (err, winner) {
+            if (err) callback(err)
+              else callback(null)
+          })
+        },
+        function (callback) {
+          loser.save(function (err, loser) {
+            if (err) callback(err)
+              else callback(null)
+          })
+        }
+      ], function (err, results) {
+        console.log(chalk.blue('Now returning results'))
+        if (err) {
+          return res.status(500).send(err)
+        } else {
+          return res.sendStatus(200)
+        }
+      })
+    })
   })
 
   /*
@@ -171,5 +227,78 @@ router.post('/', function (req, res) {
   })
  */
 })
+
+var calcRank = function (args, callback) {
+  console.log(chalk.blue('Calculating rank changes...'))
+
+  var _winner = args.winner
+  var _loser = args.loser
+  var _interstable = args.interstable
+  var _victory_condition = args.victory_condition
+
+  var wRank = _winner.rank
+  var lRank = _loser.rank
+
+  var special = [
+    'Perfect SCUD',
+    'Semi-perfect SCUD',
+    'Shooting the Moon',
+    'Running the Table',
+    'Hara-kiri',
+    'No Contest',
+    'Cupping'
+  ]
+
+  var perfect = [
+    'Perfect SCUD',
+    'Shooting the Moon',
+    'Running the Table'
+  ]
+
+  if (_interstable) {
+    if (_winner.rank === 'Jonokuchi') {
+      wRank = 'Makushita'
+    }
+
+    if (_loser.rank === 'Jonokuchi') {
+      lRank = 'Makushita'
+    }
+
+    if (_victory_condition === 'Full Clear') {
+      wRank = 'Yokozuna'
+    }
+
+    if (_winner.rank === 'Makushita' && special.indexOf(_victory_condition) > -1) {
+      wRank = 'Sekiwake'
+    }
+
+    if (_winner.rank === 'Sekiwake' && perfect.indexOf(_victory_condition) > -1) {
+      wRank = 'Ozeki'
+    }
+
+    if (_winner.rank === 'Ozeki' && perfect.indexOf(_victory_condition) > -1) {
+      wRank = 'Yokozuna'
+    }
+
+    if (_loser.nards === 0 && makuuchi.indexOf(_loser.rank) > -1) {
+      lRank = 'Komusubi'
+    }
+  } else {
+    if (_winner.rank === 'Komusubi') {
+      if (_winner.nards > 4) {
+        console.log(chalk.green('Promoting Komusubi back to former rank'))
+        wRank = _winner.former_rank
+      } else if (_winner.komusubi_counter > 8) {
+        wRank = 'Makushita'
+      }
+    }
+
+    if (_loser.rank === 'Komusubi' && _loser.komusubi_counter > 9) {
+      lRank = 'Makushita'
+    }
+  }
+
+  callback(wRank, lRank)
+}
 
 module.exports = router

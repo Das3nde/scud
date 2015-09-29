@@ -11,7 +11,7 @@ var roles = [
 var ranks = [
   'Jonokuchi',
   'Makushita',
-  'Komosubi',
+  'Komusubi',
   'Sekiwake',
   'Ozeki',
   'Yokozuna'
@@ -70,6 +70,16 @@ var UserSchema = mongoose.Schema({
     enum: ranks,
     default: 'Jonokuchi'
 
+  },
+  former_rank: {
+    type: String,
+    required: false,
+    enum: ranks
+  },
+  komusubi_counter: {
+    type: Number,
+    required: false,
+    default: 0
   }
 })
 

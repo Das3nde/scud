@@ -26,8 +26,7 @@ module.exports = function ($scope, $modalInstance, $http, users) {
     notes: ''
   }
 
-  vm.submit = function () {
+  vm.submit = () => {
     $modalInstance.close(vm.game)
   }
 }
-

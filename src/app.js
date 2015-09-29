@@ -35,7 +35,7 @@ angular.module('SCUDApp', [
         stables: function (Stable) {
           return Stable.query().$promise
         },
-        games: function(Game) {
+        games: function (Game) {
           return Game.query().$promise
         },
         /*
@@ -84,8 +84,8 @@ angular.module('SCUDApp', [
     responseError: function (rejection) {
       if (rejection.status === 401) {
         $injector.get('$state').transitionTo('login')
-        return $q.reject(rejection)
       }
+      return $q.reject(rejection)
     }
   }
 })

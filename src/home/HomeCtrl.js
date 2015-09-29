@@ -1,7 +1,7 @@
 'use strict'
 
 // @ngInject
-module.exports = function ($scope, $http, $modal, stables, users, games, currentUser, RanksService) {
+module.exports = function ($scope, $http, $modal, $state, stables, users, games, currentUser, RanksService) {
   console.log(games)
   let vm = this
   vm.stables = stables
@@ -49,20 +49,16 @@ module.exports = function ($scope, $http, $modal, stables, users, games, current
     })
 
     modalInstance.result.then(function (game) {
-      console.log(game)
       game.winner = game.winner._id
       game.loser = game.loser._id
 
-      $http({
-        method: 'POST',
-        url: '/api/games',
-        data: {game: game}
-      }).then(function (res) {
-        console.log('success callback')
-        console.log(res)
-      }, function (res) {
-        console.log('error callback')
-        console.log(res)
+      $http.post('/api/games', {game: game})
+      .success(function () {
+        // @TODO Force refresh to update dom
+        // $state.go('.', null, {reload: true})
+      })
+      .error(function (error) {
+        alert(error.message)
       })
     }, function () {
       console.log('Modal dismissed at: ' + new Date())
