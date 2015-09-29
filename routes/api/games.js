@@ -28,12 +28,19 @@ router.get('/', function (req, res, next) {
 router.post('/', function (req, res) {
   var game = req.body.game
 
+  /*
+   * Inflate the winner and the loser.
+   * We can't trust the User to submit
+   * valid data for these objects.
+   */
+
   var getWinner = function (callback) {
     Users
       .findOne({_id: game.winner})
       .populate('stable', 'name')
       .exec(function (err, winner) {
-        callback(null, winner)
+        if (err) callback(err)
+          else callback(null, winner)
       })
   }
 
@@ -42,7 +49,8 @@ router.post('/', function (req, res) {
       .findOne({_id: game.loser})
       .populate('stable', 'name')
       .exec(function (err, loser) {
-        callback(null, loser)
+        if (err) callback(err)
+          else callback(null, loser)
       })
   }
 
@@ -50,9 +58,34 @@ router.post('/', function (req, res) {
     winner: getWinner,
     loser: getLoser
   }, function (err, results) {
+    if (err) {
+      res.status(500).send(err)
+      return
+    }
 
     var winner = results.winner
     var loser = results.loser
+
+    /*
+     * Great! We have a winner and
+     * a loser. Now we need to make
+     * sure this game is valid!
+     */
+
+    function suitableRanks (rank1, rank2) {
+      var makushita = ['Jonokuchi', 'Makushita']
+      var makuuchi = ['Komusubi', 'Sekiwake', 'Ozeki', 'Yokozuna']
+
+      var validator = {
+        Jonokuchi: makushita,
+        Makushita: makushita,
+        Komosubi: makuuchi,
+        Sekiwake: makuuchi,
+        Ozeki: makuuchi,
+        Yokozuna: makuuchi
+      }
+      return validator[rank1].indexOf(rank2) > -1
+    }
 
     if (winner.stable.id === loser.stable.id) {
 
@@ -63,20 +96,35 @@ router.post('/', function (req, res) {
       winner.nards++
       winner.save(function (err) {
         // @TODO Handle error
-        if (err) throw err
-        else return res.sendStatus(202)
+        if (err) res.status(500).send(err)
+          else return res.sendStatus(202)
       })
-    } else if (winner.nards < 6 || loser.nards < 6 || !suitableRanks(winner.rank, loser.rank)) {
+    } else if (winner.nards < 6 || loser.nards < 6) {
 
       /*
       * INTER-Stable game is INVALID. Players
-      * must have nards > 6 and be of suitable
-      * Rank to compete with one another.
+      * must have nards > 6
       */
+      console.log('Invalid game - nards < 6')
 
-      // @TODO Pass Error to Front End
-      console.log('INVALID GAME!!!!')
-      return res.sendStatus(403)
+      return res.status(403).send(
+        'Invalid game - Inter-stable games can only be played ' +
+        'between players with 5 or more stacks of the nards.'
+      )
+    } else if (!suitableRanks(winner.rank, loser.rank)) {
+
+      /*
+       * INTER-Stable game is INVALID. Players
+       * must be of suitable rank to play one
+       * another.
+       */
+
+      return res.status(403).send({
+        message: 'Unsuitable Ranks: Players ranked as ' +
+          winner.rank + ' ' +
+          'cannot play players ranked as ' +
+          loser.rank
+      })
     } else {
 
       /*
@@ -101,32 +149,14 @@ router.post('/', function (req, res) {
         // @TODO Winner Takes Loser's Nards
         res.sendStatus(200)
       } else {
-        // @TODO Loser losers 1 Nards
-        res.sendStatus(200)
+        loser.nards--
+        loser.save(function (err) {
+          if (err) return res.status(500).send(err)
+            else return res.sendStatus(202)
+        })
       }
-    }
-
-    function suitableRanks (rank1, rank2) {
-      var makushita = ['Jonokuchi', 'Makushita']
-      var makuuchi = ['Komusubi', 'Sekiwake', 'Ozeki', 'Yokozuna']
-
-      var validator = {
-        Jonokuchi: makushita,
-        Makushita: makushita,
-        Komosubi: makuuchi,
-        Sekiwake: makuuchi,
-        Ozeki: makuuchi,
-        Yokozuna: makuuchi
-      }
-      return validator[rank1].indexOf(rank2) > -1     
     }
   })
-
-
-  // Get Winner from DB
-  // Get Loser from DB
-  // 
-  // Create Game Last
 
   /*
   Game.create({

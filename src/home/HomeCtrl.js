@@ -54,8 +54,9 @@ module.exports = function ($scope, $http, $modal, stables, users, games, current
       game.loser = game.loser._id
 
       $http.post('/api/games', {game: game})
-        .success(function (err, res) {
-          if (err) throw err
+        .then(function successCallback (res) {
+          console.log(res)
+        }, function errorCallback (res) {
           console.log(res)
         })
     }, function () {
