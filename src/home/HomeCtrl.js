@@ -53,12 +53,17 @@ module.exports = function ($scope, $http, $modal, stables, users, games, current
       game.winner = game.winner._id
       game.loser = game.loser._id
 
-      $http.post('/api/games', {game: game})
-        .then(function successCallback (res) {
-          console.log(res)
-        }, function errorCallback (res) {
-          console.log(res)
-        })
+      $http({
+        method: 'POST',
+        url: '/api/games',
+        data: {game: game}
+      }).then(function (res) {
+        console.log('success callback')
+        console.log(res)
+      }, function (res) {
+        console.log('error callback')
+        console.log(res)
+      })
     }, function () {
       console.log('Modal dismissed at: ' + new Date())
     })
