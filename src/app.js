@@ -38,13 +38,8 @@ angular.module('SCUDApp', [
         games: function (Game) {
           return Game.query().$promise
         },
-        /*
         users: function (User) {
           return User.query().$promise
-        },
-       */
-        users: function (RanksService) {
-          return RanksService.initialize()
         },
         currentUser: function ($q, $http) {
           var d = $q.defer()
@@ -93,8 +88,6 @@ angular.module('SCUDApp', [
 .config(function ($httpProvider) {
   $httpProvider.interceptors.push('authHttpResponseInterceptor')
 })
-
-.service('RanksService', require('./RanksService'))
 
 require('./home')
 require('./auth')

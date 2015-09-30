@@ -1,9 +1,5 @@
 h1 Welcome, {{vm.currentUser.first_name}}
 
-input(ng-model='test' typeahead='user as (user.first_name + " " + user.last_name) for user in vm.users')
-
-h2 {{test.first_name}}
-
 button(ng-click='vm.newGame()') Add New Game
 
 div(ng-if='!vm.currentUser.stable')

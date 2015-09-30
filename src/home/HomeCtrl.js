@@ -1,9 +1,9 @@
 'use strict'
 
 // @ngInject
-module.exports = function ($scope, $http, $modal, $state, stables, users, games, currentUser, RanksService) {
-  console.log(games)
+module.exports = function ($scope, $http, $modal, $state, stables, users, games, currentUser) {
   let vm = this
+
   vm.stables = stables
   vm.users = users
   vm.currentUser = currentUser
