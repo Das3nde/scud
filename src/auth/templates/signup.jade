@@ -1,24 +1,58 @@
 h1 SCUD Registry Signup
-form(name="signup" action="/signup" method="post")
-  //input(type="hidden" name="_csrf" value=csrftoken)
+form(novalidate ng-submit='signup.$valid && vm.signup()' name="signup")
   input(
-    placeholder="First Name"
-    name="first_name"
-    type="text"
+    ng-model='vm.first_name'
+    placeholder='First Name'
+    name='first_name'
+    type='text'
+    required
     )
+  div(ng-show='signup.$submitted || signup.first_name.$touched')
+    span(ng-show='signup.first_name.$error.required') First Name is required
+
+  br
+  br
+
   input(
-    placeholder="Last Name"
-    name="last_name"
-    type="text"
+    ng-model='vm.last_name'
+    placeholder='Last Name'
+    name='last_name'
+    type='text'
+    required
     )
+  div(ng-show='signup.$submitted || signup.last_name.$touched')
+    span(ng-show='signup.last_name.$error.required') Last Name is required
+
+  br
+  br
+
   input(
-    placeholder="Email"
-    name="email"
-    type="email"
+    ng-model='vm.email'
+    placeholder='Email'
+    name='email'
+    type='email'
+    required
     )
+  div(ng-show='signup.$submitted || signup.email.$touched')
+    span(ng-show='signup.email.$error.required') Email is required
+    span(ng-show='signup.email.$error.email') Email is invalid
+
+  br
+  br
+
   input( 
-    placeholder="Password"
-    name="password"
-    type="password"
+    ng-model='vm.password'
+    placeholder='Password'
+    name='password'
+    type='password'
+    required
     )
-  button(type="submit") Signup
+  div(ng-show='signup.$submitted || signup.password.$touched')
+    span(ng-show='signup.password.$error.required') Password is required
+
+  br
+  br
+
+  button(type='submit') Signup
+
+p(ng-show='vm.flash') {{vm.flash}}

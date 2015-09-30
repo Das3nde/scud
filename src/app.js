@@ -41,14 +41,7 @@ angular.module('SCUDApp', [
         users: function (User) {
           return User.query().$promise
         },
-        currentUser: function ($q, $http) {
-          var d = $q.defer()
-          $http.get('/user').then(function (user) {
-            d.resolve(user.data)
-          })
-
-          return d.promise
-        }
+        currentUser: authorize
       }
     })
     .state('login', {
@@ -60,9 +53,13 @@ angular.module('SCUDApp', [
     .state('signup', {
       url: '/signup',
       template: require('./auth/templates/signup.jade'),
-      controller: 'LoginCtrl',
+      controller: 'SignupCtrl',
       controllerAs: 'vm'
     })
+
+  function authorize (Auth) {
+    return Auth.getUser()
+  }
 })
 
 // Using $state directly causes a circular dependency error

@@ -1,14 +1,18 @@
 h1 SCUD Login
 
-form(name="login" action="/login" method="post")
+form(ng-submit='vm.login()' name="login")
   input(
+    ng-model='vm.email'
     placeholder="Email"
     name="email"
     type="email"
     )
   input(
+    ng-model='vm.password'
     placeholder="Password"
     name="password"
     type="password"
     )
   button(type="submit") Login
+
+p(ng-show='vm.flash') {{vm.flash}}

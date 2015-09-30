@@ -1,49 +1,72 @@
 var express = require('express')
 var router = express.Router()
 
+var chalk = require('chalk')
+
 var mongoose = require('mongoose')
 var User = mongoose.model('User')
 
 router.post('/login', function (req, res) {
-  User.findOne({email: req.body.email})
-    .select('password')
-    .exec(function (err, user) {
-      if (err) {
-        res.status(500).send(err)
-      } else if (!user || user.role === 'Pending') {
-        res.status(403).send({message: 'Sorry, we could not find your account!'})
-      } else {
-        user.comparePassword(req.body.password, function (err, isValid) {
-          if (err) {
-            res.status(500).send(err)
-          } else if (isValid) {
-            req.login(user, function (err) {
-              if (err) {
-                res.status(500).send(err)
-              } else {
-                res.redirect('/')
-              }
-            })
-          } else {
-            res.status(403).send({message: 'Invalid password'})
-          }
-        })
-      }
-    })
+  console.log(chalk.blue('New login request from'), req.body.email)
+  User
+  .findOne({email: req.body.email})
+  .select('password first_name last_name email role')
+  .exec(function (err, user) {
+    if (err) {
+      console.log(chalk.red('Fatal Mongoose error while finding user'), req.body.email)
+      return res.status(500).send(err)
+    } else if (!user) {
+      console.log(chalk.red('Could not find user account'), req.body.email)
+      return res.status(403).send({
+        message: 'Sorry, we could not find your account!'
+      })
+    } else if (user.role === 'Pending') {
+      console.log(chalk.red('User has not been approved:'), req.body.email)
+      return res.status(403).send({
+        message: 'Your account has not been activated yet'
+      })
+    } else {
+      user.comparePassword(req.body.password, function (err, isValid) {
+        if (err) {
+          console.log(chalk.red('Error comparing password for user'), user.email)
+          return res.status(500).send(err)
+        } else if (isValid) {
+          console.log(chalk.green('PW validation successful for user'), user.email)
+          req.login(user, function (err) {
+            if (err) {
+              console.log(chalk.red('Fatal error logging in user'), user.email)
+              return res.status(500).send(err)
+            } else {
+              console.log(
+                chalk.blue('User log in successful for'), user.first_name, user.last_name)
+              return res.sendStatus(200)
+            }
+          })
+        } else {
+          console.log(chalk.red('Invalid password for user'), user.email)
+          res.status(403).send({message: 'Invalid password'})
+        }
+      })
+    }
+  })
 })
 
 router.get('/logout', function (req, res) {
   req.logout()
-  res.redirect('/login')
+  return res.redirect('/login')
 })
 
 router.post('/signup', function (req, res) {
+  console.log(chalk.blue('Signing up user'), req.body.email)
   User.findOne({email: req.body.email}, function (err, user) {
     if (err) {
-      res.status(500).send(err)
+      console.log(chalk.red('Fatal error finding user'), req.body.email)
+      return res.status(500).send(err)
     } else if (user) {
-      res.status(403).send('You already have an account, dummy!')
+      console.log(chalk.yellow('This account already exists!'), req.body.email)
+      return res.status(403).send({message: 'You already have an account, dummy!'})
     } else {
+      console.log(chalk.yellow('Now creating user'), req.body.email)
       User.create({
         first_name: req.body.first_name,
         last_name: req.body.last_name,
@@ -52,13 +75,15 @@ router.post('/signup', function (req, res) {
         role: 'Pending'
       }, function (err, user) {
         if (err) {
-          res.status(500).send(err)
+          console.log(chalk.red('Fatal error creating user'), req.body.email)
+          return res.status(500).send(err)
         } else {
+          console.log(chalk.blue('Now attempting to email new user'), user.email)
+          /*
           var mailgun = require('mailgun-js')({
             apiKey: process.env.MAILGUN_API_KEY,
             domain: process.env.MAILGUN_DOMAIN_NAME
           })
-          console.log('Sending Email')
           mailgun.messages().send({
             from: 'Test <test@samples.mailgun.org>',
             to: user.email,
@@ -68,7 +93,8 @@ router.post('/signup', function (req, res) {
             if (err) console.log('Error sending email', err)
               else console.log('Email ID:', body.id)
           })
-          res.send('You should receive a confirmation email shortly!')
+          */
+          return res.sendStatus(200)
         }
       })
     }
