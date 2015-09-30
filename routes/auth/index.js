@@ -2,6 +2,7 @@ var express = require('express')
 var router = express.Router()
 
 var chalk = require('chalk')
+var jade = require('jade')
 
 var mongoose = require('mongoose')
 var User = mongoose.model('User')
@@ -79,21 +80,31 @@ router.post('/signup', function (req, res) {
           return res.status(500).send(err)
         } else {
           console.log(chalk.blue('Now attempting to email new user'), user.email)
-          /*
+
           var mailgun = require('mailgun-js')({
             apiKey: process.env.MAILGUN_API_KEY,
             domain: process.env.MAILGUN_DOMAIN_NAME
           })
+
+          var html = jade.renderFile('./emails/confirmation.jade', {
+            name: user.first_name + ' ' + user.last_name,
+            confirmurl: 'http://' + req.get('host') + '/confirm/' + user.id
+          })
+
           mailgun.messages().send({
             from: 'Test <test@samples.mailgun.org>',
             to: user.email,
-            subject: 'Confirm Account',
-            text: 'Please use ID: ' + user._id
+            bcc: 'knutson.justin@gmail.com',
+            subject: 'Confirm SCUD Registry Account',
+            html: html
           }, function (err, body) {
-            if (err) console.log('Error sending email', err)
-              else console.log('Email ID:', body.id)
+            if (err) {
+              console.log('Error sending email', err)
+              return res.status(500).send(err)
+            } else {
+              console.log(chalk.blue('Confirmation Email ID:'), body.id)
+            }
           })
-          */
           return res.sendStatus(200)
         }
       })
@@ -102,24 +113,24 @@ router.post('/signup', function (req, res) {
 })
 
 router.get('/confirm/:id', function (req, res) {
-  console.log('Confirming id: ', req.params.id)
+  console.log(chalk.blue('Confirming user with id'), req.params.id)
   User.findOne({_id: req.params.id}, function (err, user) {
-    if (err) res.status(500).send(err)
+    if (err) return res.status(500).send(err)
     else if (user && user.role === 'Pending') {
       user.role = 'Competitor'
       user.save(function (err) {
-        console.log('User saved as...', user.role)
+        console.log(chalk.blue('User saved as...'), user.role)
         if (err) {
-          res.status(500).send(err)
+          return res.status(500).send(err)
         } else {
           req.login(user, function (err) {
-            if (err) res.status(500).send(err)
-            else res.redirect('/')
+            if (err) return res.status(500).send(err)
+            else return res.redirect('/')
           })
         }
       })
     } else {
-      res.redirect('/login')
+      return res.redirect('/login')
     }
   })
 })
