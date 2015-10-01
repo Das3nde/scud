@@ -103,9 +103,9 @@ router.post('/signup', function (req, res) {
               return res.status(500).send(err)
             } else {
               console.log(chalk.blue('Confirmation Email ID:'), body.id)
+              return res.sendStatus(200)
             }
           })
-          return res.sendStatus(200)
         }
       })
     }
