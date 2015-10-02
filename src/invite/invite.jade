@@ -1,0 +1,46 @@
+h1 Invite a New Player
+form(ng-submit='inviteForm.$valid && vm.submit()' novalidate name='inviteForm')
+  label First Name
+  input(
+    placeholder='First Name'
+    ng-model='vm.first_name'
+    name='first_name'
+    type='text'
+    required
+  )
+  div(ng-show='inviteForm.$submitted || inviteForm.first_name.$touched')
+    span(ng-show='inviteForm.first_name.$error.required') First Name is required
+
+  br
+  br
+
+  label Last Name
+  input(
+    placeholder='Last Name'
+    ng-model='vm.last_name'
+    name='last_name'
+    type='text'
+    required
+  )
+  div(ng-show='inviteForm.$submitted || inviteForm.last_name.$touched')
+    span(ng-show='inviteForm.last_name.$error.required') Last Name is required
+
+  br
+  br
+
+  label Email Address
+  input(
+    placeholder='Email'
+    ng-model='vm.email'
+    name='email'
+    type='email'
+    required
+  )
+  div(ng-show='inviteForm.$submitted || inviteForm.email.$touched')
+    span(ng-show='inviteForm.email.$error.required') Email is required
+    span(ng-show='inviteForm.email.$error.email') Email is invalid
+
+  br
+  br
+
+  button(type='submit') Submit

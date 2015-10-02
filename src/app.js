@@ -65,6 +65,16 @@ angular.module('SCUDApp', [
       url: '/invite',
       template: '<h2>Invite</h2>'
     })
+    .state('ranks', {
+      url: '/ranks',
+      template: require('./ranks/ranks.jade')
+    })
+    .state('invite', {
+      url: '/invite',
+      template: require('./invite/invite.jade'),
+      controller: 'InviteCtrl',
+      controllerAs: 'vm'
+    })
 
   function authorize (Auth) {
     return Auth.getUser()
@@ -98,3 +108,4 @@ angular.module('SCUDApp', [
 require('./home')
 require('./auth')
 require('./models')
+require('./invite')

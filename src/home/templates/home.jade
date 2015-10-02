@@ -1,5 +1,10 @@
 h1 Welcome, {{vm.currentUser.first_name}}
 a(href='/logout' target='_self') Logout &raquo;
+br
+a(ui-sref='invite') Invite a new player
+
+h2 Your current rank is {{vm.currentUser.rank}}
+a(ui-sref='ranks') What does this mean?
 
 br
 br
