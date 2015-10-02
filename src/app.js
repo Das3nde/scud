@@ -56,6 +56,15 @@ angular.module('SCUDApp', [
       controller: 'SignupCtrl',
       controllerAs: 'vm'
     })
+    .state('admin', {
+      url: '/admin',
+      abstract: true,
+      template: '<h1>Test</h1><ui-view></ui-view>'
+    })
+    .state('admin.invite', {
+      url: '/invite',
+      template: '<h2>Invite</h2>'
+    })
 
   function authorize (Auth) {
     return Auth.getUser()
