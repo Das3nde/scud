@@ -1,7 +1,7 @@
 'use strict'
 
 // @ngInject
-module.exports = function ($scope, $http, $modal, $state, stables, users, games, currentUser) {
+module.exports = function ($scope, $http, $modal, $state, $window, stables, users, games, currentUser) {
   let vm = this
 
   vm.stables = stables
@@ -58,7 +58,7 @@ module.exports = function ($scope, $http, $modal, $state, stables, users, games,
         // $state.go('.', null, {reload: true})
       })
       .error(function (error) {
-        alert(error.message)
+        $window.alert(error.message)
       })
     }, function () {
       console.log('Modal dismissed at: ' + new Date())

@@ -112,6 +112,61 @@ router.post('/signup', function (req, res) {
   })
 })
 
+router.post('/invite', function (req, res) {
+  console.log(chalk.blue('Inviting new user'), req.body.email)
+  User.findOne({email: req.body.email}, function (err, user) {
+    if (err) {
+      console.log(chalk.red(err))
+      return res.status(500).send(err)
+    } else if (user) {
+      console.log(chalk.red('User already exists!'))
+      return res.status(500).send({message: 'User already exists!'})
+    } else {
+      // @TODO Create new User
+      User.create({
+        first_name: req.body.first_name,
+        last_name: req.body.last_name,
+        email: req.body.email,
+        password: 'a1b2c3',
+        role: 'Pending'
+      }, function (err, user) {
+        if (err) {
+          console.log('An error has occurred', chalk.red(500))
+          console.log(chalk.red(err.message))
+          return res.status(500).send(err)
+        } else {
+          console.log(chalk.blue('Successfully created user'), user.email)
+          var mailgun = require('mailgun-js')({
+            apiKey: process.env.MAILGUN_API_KEY,
+            domain: process.env.MAILGUN_DOMAIN_NAME
+          })
+
+          var html = jade.renderFile('./emails/invite.jade', {
+            name: user.first_name + ' ' + user.last_name,
+            confirmurl: 'http://' + req.get('host') + '/invite/' + user.id
+          })
+
+          mailgun.messages().send({
+            from: 'Test <test@samples.mailgun.org>',
+            to: 'knutson.justin@gmail.com',
+            // bcc: 'knutson.justin@gmail.com',
+            subject: 'You have been invited to join the SCUD registry',
+            html: html
+          }, function (err, body) {
+            if (err) {
+              console.log('Error sending email', err)
+              return res.status(500).send(err)
+            } else {
+              console.log(chalk.blue('Confirmation Email ID:'), body.id)
+              return res.sendStatus(200)
+            }
+          })
+        }
+      })
+    }
+  })
+})
+
 router.get('/confirm/:id', function (req, res) {
   console.log(chalk.blue('Confirming user with id'), req.params.id)
   User.findOne({_id: req.params.id}, function (err, user) {
