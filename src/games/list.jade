@@ -1,0 +1,2 @@
+div(ng-repeat='game in vm.games | orderBy : created : true')
+  p {{game.winner.first_name}} {{game.winner.last_name}} defeated {{game.loser.first_name}} {{game.loser.last_name}} ({{game.victory_condition}})

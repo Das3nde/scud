@@ -76,14 +76,17 @@ angular.module('SCUDApp', [
       controller: 'ConfirmInviteCtrl',
       controllerAs: 'vm'
     })
-    /*
-    .state('invite.confirm', {
-      url: '/invite/confirm/:id',
-      template: require('./invite/confirm.jade'),
-      controller: 'ConfirmInviteCtrl',
-      controllerAs: 'vm'
+    .state('games', {
+      url: '/games',
+      template: require('./games/list.jade'),
+      controller: 'GamesListCtrl',
+      controllerAs: 'vm',
+      resolve: {
+        games: function (Game) {
+          return Game.query().$promise
+        }
+      }
     })
-   */
 
   function authorize (Auth) {
     return Auth.getUser()
@@ -118,3 +121,4 @@ require('./home')
 require('./auth')
 require('./models')
 require('./invite')
+require('./games')

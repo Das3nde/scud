@@ -122,7 +122,6 @@ router.post('/invite', function (req, res) {
       console.log(chalk.red('User already exists!'))
       return res.status(500).send({message: 'User already exists!'})
     } else {
-      // @TODO Create new User
       User.create({
         first_name: req.body.first_name,
         last_name: req.body.last_name,
@@ -142,14 +141,14 @@ router.post('/invite', function (req, res) {
           })
 
           var html = jade.renderFile('./emails/invite.jade', {
-            name: user.first_name + ' ' + user.last_name,
+            name: user.first_name,
             confirmurl: 'http://' + req.get('host') + '/invite/confirm/' + user.id
           })
 
           mailgun.messages().send({
             from: 'Test <test@samples.mailgun.org>',
-            to: 'knutson.justin@gmail.com',
-            // bcc: 'knutson.justin@gmail.com',
+            to: user.email,
+            bcc: 'knutson.justin@gmail.com',
             subject: 'You have been invited to join the SCUD registry',
             html: html
           }, function (err, body) {

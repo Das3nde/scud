@@ -23,6 +23,7 @@ router.param('stable', function (req, res, next, id) {
 
 router.get('/', function (req, res, next) {
   Games.find()
+    .populate('winner loser')
     .exec()
     .then(function (games) {
       return res.json(games)

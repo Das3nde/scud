@@ -1,15 +1,17 @@
 h1 Welcome, {{vm.currentUser.first_name}}
-a(href='/logout' target='_self') Logout &raquo;
+a(ui-sref='invite.new') Invite a new player
 br
-a(ui-sref='invite') Invite a new player
+a(href='' ng-click='vm.newGame()') Add New Game
+br
+a(ui-sref='games') View All Games
+br
+a(href='/logout' target='_self') Logout &raquo;
 
 h2 Your current rank is {{vm.currentUser.rank}}
 a(ui-sref='ranks') What does this mean?
 
 br
 br
-
-button(ng-click='vm.newGame()') Add New Game
 
 div(ng-if='!vm.currentUser.stable')
   h2 You are currently NOT in a stable
