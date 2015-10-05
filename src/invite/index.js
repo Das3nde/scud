@@ -3,4 +3,5 @@
 var angular = require('angular')
 
 angular.module('SCUDApp')
-  .controller('InviteCtrl', require('./InviteCtrl.js'))
+  .controller('NewInviteCtrl', require('./NewInviteCtrl.js'))
+  .controller('ConfirmInviteCtrl', require('./ConfirmInviteCtrl.js'))

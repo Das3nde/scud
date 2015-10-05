@@ -167,6 +167,11 @@ router.post('/invite', function (req, res) {
   })
 })
 
+router.post('/invite/confirm', function (req, res) {
+  console.log(req.body.id)
+  return res.sendStatus(200)
+})
+
 router.get('/confirm/:id', function (req, res) {
   console.log(chalk.blue('Confirming user with id'), req.params.id)
   User.findOne({_id: req.params.id}, function (err, user) {

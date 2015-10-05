@@ -1,0 +1,32 @@
+h1 Reset password to confirm account
+
+form(ng-submit='form.$valid && vm.submit()' novalidate name='form')
+  label New Password
+  input(
+    placeholder='New Password'
+    ng-model='vm.password'
+    name='password'
+    type='password'
+    required
+    )
+  div(ng-show='form.$submitted || form.password.$touched')
+    span(ng-show='form.password.$error.required') Password is required
+
+  br
+  br
+
+  label Confirm New Password
+  input(
+    placeholder='Confirm Password'
+    ng-model='vm.confirm'
+    name='confirm'
+    type='password'
+    required
+  )
+  div(ng-show='form.$submitted || form.confirm.$touched')
+   span(ng-show='vm.password!==vm.confirm') Passwords must match
+
+  br
+  br
+
+  button(type='submit' ng-disabled='form.$invalid') Confirm Account

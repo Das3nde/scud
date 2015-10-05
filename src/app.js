@@ -56,25 +56,34 @@ angular.module('SCUDApp', [
       controller: 'SignupCtrl',
       controllerAs: 'vm'
     })
-    .state('admin', {
-      url: '/admin',
-      abstract: true,
-      template: '<h1>Test</h1><ui-view></ui-view>'
-    })
-    .state('admin.invite', {
-      url: '/invite',
-      template: '<h2>Invite</h2>'
-    })
     .state('ranks', {
       url: '/ranks',
       template: require('./ranks/ranks.jade')
     })
     .state('invite', {
       url: '/invite',
-      template: require('./invite/invite.jade'),
-      controller: 'InviteCtrl',
+      template: '<ui-view></ui-view>'
+    })
+    .state('invite.new', {
+      url: '/new',
+      template: require('./invite/new.jade'),
+      controller: 'NewInviteCtrl',
       controllerAs: 'vm'
     })
+    .state('invite.confirm', {
+      url: '/confirm/:id',
+      template: require('./invite/confirm.jade'),
+      controller: 'ConfirmInviteCtrl',
+      controllerAs: 'vm'
+    })
+    /*
+    .state('invite.confirm', {
+      url: '/invite/confirm/:id',
+      template: require('./invite/confirm.jade'),
+      controller: 'ConfirmInviteCtrl',
+      controllerAs: 'vm'
+    })
+   */
 
   function authorize (Auth) {
     return Auth.getUser()
