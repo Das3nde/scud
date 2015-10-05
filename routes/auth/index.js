@@ -169,16 +169,30 @@ router.post('/invite', function (req, res) {
 
 router.post('/invite/confirm', function (req, res) {
   User.findOne({_id: req.body.id}, function (err, user) {
-    // @TODO Handle Error
-    user.password = req.body.password
-    user.role = 'Competitor'
-    user.save(function (err) {
-      // @TODO Handle Error
-      req.login(user, function (err) {
-        // @TODO Handle Error
-        return res.sendStatus(200)
+    if (err) {
+      console.log(chalk.red('An error occurred retrieving user with ID'), req.body.id)
+      console.log(chalk.red(err.message))
+      return res.status(500).send(err)
+    } else if (!user) {
+      console.log(chalk.red('Could not find user with ID'), req.body.id)
+      return res.status(404).send({message: 'Could not find user!'})
+    } else {
+      user.password = req.body.password
+      user.role = 'Competitor'
+      user.save(function (err) {
+        if (err) {
+          console.log(chalk.red('An error occurred saving user'), user.email)
+          return res.status(500).send(err)
+        } else {
+          req.login(user, function (err) {
+            if (err) {
+              console.log(chalk.red('An error occurred logging in user'), user.email)
+              return res.status(500).send(err)
+            } else return res.sendStatus(200)
+          })
+        }
       })
-    })
+    }
   })
 })
 

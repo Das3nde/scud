@@ -1,7 +1,7 @@
 'use strict'
 
 // @ngInject
-module.exports = function ($http, $state, $stateParams) {
+module.exports = function ($http, $state, $stateParams, $window) {
   let vm = this
 
   vm.submit = () => {
@@ -11,7 +11,7 @@ module.exports = function ($http, $state, $stateParams) {
       $state.go('home')
     })
     .error(function (err) {
-      console.log(err.message)
+      $window.alert(err.message)
     })
   }
 }
