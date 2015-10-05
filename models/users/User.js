@@ -78,8 +78,7 @@ var UserSchema = mongoose.Schema({
   },
   komusubi_counter: {
     type: Number,
-    required: false,
-    default: 0
+    required: false
   },
   game_history: [
     {
