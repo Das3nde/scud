@@ -143,7 +143,7 @@ router.post('/invite', function (req, res) {
 
           var html = jade.renderFile('./emails/invite.jade', {
             name: user.first_name + ' ' + user.last_name,
-            confirmurl: 'http://' + req.get('host') + '/invite/' + user.id
+            confirmurl: 'http://' + req.get('host') + '/invite/confirm/' + user.id
           })
 
           mailgun.messages().send({
@@ -168,8 +168,18 @@ router.post('/invite', function (req, res) {
 })
 
 router.post('/invite/confirm', function (req, res) {
-  console.log(req.body.id)
-  return res.sendStatus(200)
+  User.findOne({_id: req.body.id}, function (err, user) {
+    // @TODO Handle Error
+    user.password = req.body.password
+    user.role = 'Competitor'
+    user.save(function (err) {
+      // @TODO Handle Error
+      req.login(user, function (err) {
+        // @TODO Handle Error
+        return res.sendStatus(200)
+      })
+    })
+  })
 })
 
 router.get('/confirm/:id', function (req, res) {
